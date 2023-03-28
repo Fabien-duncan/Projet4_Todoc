@@ -31,7 +31,7 @@ public class MainActivityViewModel extends ViewModel {
         this.executor = executor;
     }
 
-    public void init(long userId) {
+    public void init() {
         if(this.allTasks != null && allProjects != null) {
             return;
         }
