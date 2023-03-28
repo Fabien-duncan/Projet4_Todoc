@@ -8,6 +8,8 @@ import androidx.room.Query;
 
 import com.cleanup.todoc.model.Project;
 
+import java.util.List;
+
 @Dao
 public interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -17,5 +19,5 @@ public interface ProjectDao {
     LiveData<Project> getProject(long projectId);
 
     @Query("SELECT * FROM Project")
-    LiveData<Project> getAllProjects();
+    LiveData<List<Project>> getAllProjects();
 }

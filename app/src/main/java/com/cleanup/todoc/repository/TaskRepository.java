@@ -22,5 +22,5 @@ public class TaskRepository {
     public void deleteTask(long taskId){ mTaskDao.deleteTask(taskId); }
 
     // --- UPDATE ---
-    public void updateItem(Task task){ mTaskDao.updateTask(task); }
+    public void updateTask(Task task){ mTaskDao.updateTask(task); }
 }
