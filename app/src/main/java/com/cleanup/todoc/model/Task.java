@@ -45,7 +45,6 @@ public class Task {
     /**
      * Instantiates a new Task.
      *
-     * @param id                the unique identifier of the task to set
      * @param projectId         the unique identifier of the project associated to the task to set
      * @param name              the name of the task to set
      * @param creationTimestamp the timestamp when the task has been created to set
@@ -73,10 +72,16 @@ public class Task {
      *
      * @param id the unique idenifier of the task to set
      */
-    private void setId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
+    public long getProjectId() {
+        return projectId;
+    }
 
+    public long getCreationTimestamp() {
+        return creationTimestamp;
+    }
     /**
      * Sets the unique identifier of the project associated to the task.
      *
