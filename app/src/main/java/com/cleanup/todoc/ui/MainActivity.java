@@ -42,17 +42,18 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    //private final Project[] allProjects = Project.getAllProjects();
+    private Project[] allProjects;
     /**
      * List of all current tasks of the application
      */
-    @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    /*@NonNull
+    private final ArrayList<Task> tasks = new ArrayList<>();*/
 
     /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter; //= new TasksAdapter(tasks, this);
 
     /**
      * The sort method to be used to display tasks
@@ -85,13 +86,25 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        configureViewModel();
+        /*mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
+        mMainActivityViewModel.init();*/
+
+        //List<Project> allprojects = mMainActivityViewModel.getAllProjects().getValue();
+        //System.out.println("id of project 1" + allprojects.get(1).getName());
+        //mMainActivityViewModel.addTask(allprojects.get(1).getId(), "Fabien");
+
+        //mMainActivityViewModel.addProject(new Project(5L, "fabs", 0xFFA3CED2));
+
+        getProjects();
+
+        adapter = new TasksAdapter(this);
         binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.listTasks.setAdapter(adapter);
 
-        mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
-        mMainActivityViewModel.init();
+        mMainActivityViewModel.getAllTasks().observe(this, this::updateTasks);
 
-        updateTasks();
+        //updateTasks();
         binding.fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,15 +112,21 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
         });
 
-        mMainActivityViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
+        /*mMainActivityViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 // update RecyclerView
                 adapter.updateTasks(tasks);
             }
-        });
+        });*/
     }
-
+    private void configureViewModel() {
+        mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
+        mMainActivityViewModel.init();
+    }
+    private void getProjects() {
+        this.mMainActivityViewModel.getAllProjects().observe(this, this::updateProjectList);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
@@ -128,15 +147,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        updateTasks();
+        //updateTasks();
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onDeleteTask(Task task) {
-        tasks.remove(task);
-        updateTasks();
+        this.mMainActivityViewModel.deleteTask(task.getId());
+        //System.out.println("delete task " + task.getName());
+        //tasks.remove(task);
+        //updateTasks();
     }
 
     /**
@@ -169,6 +190,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 );
 
                 addTask(task);
+                //mMainActivityViewModel.addProject(new Project(5L, "Fabien", 0xFFA3CED2));
+                //List<Project> allprojects = mMainActivityViewModel.getAllProjects().getValue();
+                //System.out.println("id of project 5 " + mMainActivityViewModel.getAllProjects().getValue().size());
+                //mMainActivityViewModel.addTask(5L, "Fabien");
+
 
                 dialogInterface.dismiss();
             }
@@ -203,14 +229,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        tasks.add(task);
-        updateTasks();
+        //tasks.add(task);
+        //updateTasks();
+        this.mMainActivityViewModel.addTask(task.getProjectId(), task.getName());
     }
 
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() {
+    private void updateTasks(List<Task> tasks) {
         if (tasks.size() == 0) {
             binding.lblNoTask.setVisibility(View.VISIBLE);
             binding.listTasks.setVisibility(View.GONE);
@@ -289,6 +316,14 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             dialogSpinner.setAdapter(adapter);
         }
     }
+    private void updateProjectList(List<Project> projects){
+        adapter.updateProjects(projects);
+        allProjects = new Project[projects.size()];
+        for(int i = 0; i < projects.size(); i++){
+            allProjects[i] = projects.get(i);
+        }
+
+    }
 
     /**
      * List of all possible sort methods for task
@@ -315,4 +350,5 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
          */
         NONE
     }
+
 }
