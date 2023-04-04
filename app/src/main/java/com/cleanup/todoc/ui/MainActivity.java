@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     @NonNull
     private SortMethod sortMethod = SortMethod.NONE;
+    private int isSorted = 0;
 
     /**
      * Dialog to create a new task
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     private Spinner dialogSpinner = null;
 
     private MainActivityViewModel mMainActivityViewModel;
+    private List<Task> tasks = new ArrayList<>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         adapter = new TasksAdapter(this);
         binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mMainActivityViewModel.getAllTasks().observe(this, this::updateTasks);
+        mMainActivityViewModel.getAllTasks().observe(this, this::updateListOfTasks);
         binding.listTasks.setAdapter(adapter);
 
         //updateTasks();
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        //updateTasks();
+        updateTasks();
 
         return super.onOptionsItemSelected(item);
     }
@@ -236,7 +238,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks(List<Task> tasks) {
+    private void updateListOfTasks(List<Task> newList) {
+        tasks = newList;
+        updateTasks();
+    }
+    private void updateTasks() {
         if (tasks.size() == 0) {
             binding.lblNoTask.setVisibility(View.VISIBLE);
             binding.listTasks.setVisibility(View.GONE);
@@ -246,9 +252,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             switch (sortMethod) {
                 case ALPHABETICAL:
                     Collections.sort(tasks, new Task.TaskAZComparator());
+                    mMainActivityViewModel.updateSorted(1);
                     break;
                 case ALPHABETICAL_INVERTED:
                     Collections.sort(tasks, new Task.TaskZAComparator());
+                    mMainActivityViewModel.updateSorted(2);
                     break;
                 case RECENT_FIRST:
                     Collections.sort(tasks, new Task.TaskRecentComparator());

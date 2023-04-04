@@ -3,7 +3,9 @@ package com.cleanup.todoc.ui;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.cleanup.todoc.model.Project;
@@ -28,11 +30,25 @@ public class MainActivityViewModel extends ViewModel {
     @Nullable
     private LiveData<List<Project>> allProjects;
 
-    private MutableLiveData<List<Task>> allTasksMutable;
+    private final MediatorLiveData<List<Task>> allTasksMediator = new MediatorLiveData<>();
+    private int isSorted = 0;
     public MainActivityViewModel(TaskRepository taskRepository, ProjectRepository projectRepository, Executor executor) {
         mProjectRepository = projectRepository;
         mTaskRepository = taskRepository;
         this.executor = executor;
+
+       /* allTasks = this.mTaskRepository.getAllTasks();
+        allProjects = this.mProjectRepository.getAllProjects();*/
+
+        /*LiveData<List<Task>> tempLiveData = taskRepository.getAllTasks();
+        allTasksMediator.addSource(tempLiveData, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                System.out.println("in on change");
+                combine(tasks);
+            }
+        });*/
+
     }
 
     public void init() {
@@ -41,14 +57,25 @@ public class MainActivityViewModel extends ViewModel {
         }
         if(this.allTasks == null) allTasks = mTaskRepository.getAllTasks();
         if(this.allProjects == null) allProjects = mProjectRepository.getAllProjects();*/
+
         allTasks = mTaskRepository.getAllTasks();
+        //allTasks = mTaskRepository.getAllSortedTasks(1);
         allProjects = mProjectRepository.getAllProjects();
+
+        /*allTasksMediator.addSource(allTasks, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                combine(tasks);
+            }
+        });*/
     }
 
     // -------------
     // FOR Projects
     // -------------
-    public LiveData<List<Project>> getAllProjects() { return allProjects;  }
+    public LiveData<List<Project>> getAllProjects() {
+        return allProjects;
+    }
 
 
 /*    public LiveData<Project> getProject(long projectId){ return mProjectRepository.getProject(projectId); }
@@ -58,7 +85,11 @@ public class MainActivityViewModel extends ViewModel {
     // FOR Tasks
     // -------------
     public LiveData<List<Task>> getAllTasks() {
-        return this.allTasks;
+        if(isSorted > 0){
+            System.out.println("getting sorted List");
+            return mTaskRepository.getAllSortedTasks(isSorted);
+        }
+        else return this.allTasks;
     }
 
 
@@ -83,4 +114,12 @@ public class MainActivityViewModel extends ViewModel {
     public void sortTasks(String type){
 
     }
+    public void updateSorted(int isSorted){
+        this.isSorted = isSorted;
+    }
+    /*private void combine(@Nullable List<Task> tasks){
+        System.out.println("in combine");
+        if(tasks == null) return;
+        System.out.println("first task " + tasks.get(0).getName());
+    }*/
 }

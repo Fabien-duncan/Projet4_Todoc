@@ -31,8 +31,8 @@ public class TaskRepository {
     }
 
     // --- GET ---
-    public LiveData<List<Task>> getAllTasks(){ return this.mTaskDao.getAlltask(); }
-
+    public LiveData<List<Task>> getAllTasks(){ return allTasks; }
+    public LiveData<List<Task>> getAllSortedTasks(int isSorted){return mTaskDao.getSortedList(isSorted);}
     // --- CREATE ---
     public void addTask(Task task){ mTaskDao.addTask(task); }
 
