@@ -47,8 +47,8 @@ public abstract class TodocDatabase extends RoomDatabase {
                 super.onCreate(db);
                 Executors.newSingleThreadExecutor().execute(() -> INSTANCE.mProjectDao().addProject(new Project(1L, "Projet Tartampion", 0xFFEADAD1)));
                 Executors.newSingleThreadExecutor().execute(() -> INSTANCE.mProjectDao().addProject(new Project(2L, "Projet Lucidia", 0xFFB4CDBA)));
-                Executors.newSingleThreadExecutor().execute(() -> INSTANCE.mProjectDao().addProject(new Project(4L, "Projet Circus", 0xFFA3CED2)));
-                Executors.newSingleThreadExecutor().execute(() -> INSTANCE.mTaskDao().addTask(new Task(1, "fabien", new Date().getTime())));
+                Executors.newSingleThreadExecutor().execute(() -> INSTANCE.mProjectDao().addProject(new Project(3L, "Projet Circus", 0xFFA3CED2)));
+                //Executors.newSingleThreadExecutor().execute(() -> INSTANCE.mProjectDao().addProject(new Project(4L, "Projet Fabien", 0xFFA300D2)));
             }
         };
     }

@@ -3,6 +3,7 @@ package com.cleanup.todoc.ui;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cleanup.todoc.model.Project;
@@ -27,6 +28,7 @@ public class MainActivityViewModel extends ViewModel {
     @Nullable
     private LiveData<List<Project>> allProjects;
 
+    private MutableLiveData<List<Task>> allTasksMutable;
     public MainActivityViewModel(TaskRepository taskRepository, ProjectRepository projectRepository, Executor executor) {
         mProjectRepository = projectRepository;
         mTaskRepository = taskRepository;
@@ -48,6 +50,7 @@ public class MainActivityViewModel extends ViewModel {
     // -------------
     public LiveData<List<Project>> getAllProjects() { return allProjects;  }
 
+
 /*    public LiveData<Project> getProject(long projectId){ return mProjectRepository.getProject(projectId); }
     public String getProjectName(long projectId){return name;}*/
 
@@ -57,6 +60,7 @@ public class MainActivityViewModel extends ViewModel {
     public LiveData<List<Task>> getAllTasks() {
         return this.allTasks;
     }
+
 
     public void addTask(long projectId, @NonNull String name) {
         executor.execute(() -> {
@@ -75,5 +79,8 @@ public class MainActivityViewModel extends ViewModel {
 
     public void addProject(Project project){
         executor.execute(() -> mProjectRepository.addProject(project));
+    }
+    public void sortTasks(String type){
+
     }
 }

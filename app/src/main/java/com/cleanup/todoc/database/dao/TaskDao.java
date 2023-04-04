@@ -3,6 +3,7 @@ package com.cleanup.todoc.database.dao;
 import android.database.Cursor;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -18,7 +19,8 @@ import java.util.List;
 public interface TaskDao {
     @Query("SELECT * FROM Task")
     LiveData<List<Task>> getAlltask();
-
+    @Query("SELECT * FROM Task")
+    List<Task> getListTasks();
     @Insert
     long addTask(Task task);
 

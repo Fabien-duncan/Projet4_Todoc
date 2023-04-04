@@ -100,9 +100,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         adapter = new TasksAdapter(this);
         binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        binding.listTasks.setAdapter(adapter);
-
         mMainActivityViewModel.getAllTasks().observe(this, this::updateTasks);
+        binding.listTasks.setAdapter(adapter);
 
         //updateTasks();
         binding.fabAddTask.setOnClickListener(new View.OnClickListener() {
