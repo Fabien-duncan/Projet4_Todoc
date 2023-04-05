@@ -21,8 +21,12 @@ public interface TaskDao {
     LiveData<List<Task>> getAlltask();
     @Query("SELECT * FROM Task")
     List<Task> getListTasks();
-    @Query("Select * FROM Task ORDER BY CASE WHEN :isAsc = 1 THEN name END ASC, CASE WHEN :isAsc = 2 THEN name END DESC")
-    LiveData<List<Task>> getSortedList(int isAsc);
+    @Query("Select * FROM Task ORDER BY " +
+            "CASE WHEN :sortType = 1 THEN name END ASC, " +
+            "CASE WHEN :sortType = 2 THEN name END DESC," +
+            "CASE WHEN :sortType = 3 THEN creationTimestamp END ASC," +
+            "CASE WHEN :sortType = 4 THEN creationTimestamp END DESC")
+    LiveData<List<Task>> getSortedList(int sortType);
     @Insert
     long addTask(Task task);
 
