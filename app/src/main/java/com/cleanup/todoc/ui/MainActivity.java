@@ -140,8 +140,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         if (id == R.id.filter_alphabetical) {
             sortMethod = SortMethod.ALPHABETICAL;
+            mMainActivityViewModel.updateSorted(1);
         } else if (id == R.id.filter_alphabetical_inverted) {
             sortMethod = SortMethod.ALPHABETICAL_INVERTED;
+            mMainActivityViewModel.updateSorted(2);
         } else if (id == R.id.filter_oldest_first) {
             sortMethod = SortMethod.OLD_FIRST;
         } else if (id == R.id.filter_recent_first) {
@@ -251,12 +253,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             binding.listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
                 case ALPHABETICAL:
-                    Collections.sort(tasks, new Task.TaskAZComparator());
-                    mMainActivityViewModel.updateSorted(1);
+                    //Collections.sort(tasks, new Task.TaskAZComparator());
+                    //mMainActivityViewModel.updateSorted(1);
                     break;
                 case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasks, new Task.TaskZAComparator());
-                    mMainActivityViewModel.updateSorted(2);
+                    //Collections.sort(tasks, new Task.TaskZAComparator());
+                    //mMainActivityViewModel.updateSorted(2);
                     break;
                 case RECENT_FIRST:
                     Collections.sort(tasks, new Task.TaskRecentComparator());

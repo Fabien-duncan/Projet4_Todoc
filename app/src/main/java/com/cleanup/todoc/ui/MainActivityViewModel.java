@@ -28,9 +28,15 @@ public class MainActivityViewModel extends ViewModel {
     @Nullable
     private LiveData<List<Task>> allTasks;
     @Nullable
+    private LiveData<List<Task>> tasksSortedAtoZ;
+    @Nullable
+    private LiveData<List<Task>>tasksSortedZtoA;
+    @Nullable
     private LiveData<List<Project>> allProjects;
+    @Nullable
+    private MutableLiveData<Integer> sortType = new MutableLiveData<>();
 
-    private final MediatorLiveData<List<Task>> allTasksMediator = new MediatorLiveData<>();
+    private MediatorLiveData<List<Task>> allTasksMediator = new MediatorLiveData<>();
     private int isSorted = 0;
     public MainActivityViewModel(TaskRepository taskRepository, ProjectRepository projectRepository, Executor executor) {
         mProjectRepository = projectRepository;
@@ -62,12 +68,49 @@ public class MainActivityViewModel extends ViewModel {
         //allTasks = mTaskRepository.getAllSortedTasks(1);
         allProjects = mProjectRepository.getAllProjects();
 
-        /*allTasksMediator.addSource(allTasks, new Observer<List<Task>>() {
+        tasksSortedAtoZ = mTaskRepository.getAllSortedTasks(1);
+        tasksSortedZtoA = mTaskRepository.getAllSortedTasks(2);
+
+        allTasksMediator.addSource(tasksSortedAtoZ, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
-                combine(tasks);
+                if(tasks != null){
+                    if(isSorted == 1)allTasksMediator.setValue(tasks);
+                }
+                else System.out.println("null");
+                //combine(tasks);
             }
-        });*/
+        });
+
+        allTasksMediator.addSource(allTasks, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                if (tasks != null) {
+                    if (isSorted == 0) allTasksMediator.setValue(tasks);
+                } else System.out.println("null");
+                //combine(tasks);
+            }
+        });
+        allTasksMediator.addSource(tasksSortedZtoA, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                if(tasks != null){
+                    if(isSorted == 2)allTasksMediator.setValue(tasks);
+                }
+                else System.out.println("null");
+                //combine(tasks);
+            }
+        });
+        allTasksMediator.addSource(sortType, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(integer != null && tasksSortedAtoZ.getValue()!= null && tasksSortedZtoA.getValue()!= null){
+                    if(integer == 1) allTasksMediator.setValue(tasksSortedAtoZ.getValue());
+                    else if(integer == 2) allTasksMediator.setValue(tasksSortedZtoA.getValue());
+                }
+                else System.out.println("int or list is null");
+            }
+        });
     }
 
     // -------------
@@ -85,11 +128,7 @@ public class MainActivityViewModel extends ViewModel {
     // FOR Tasks
     // -------------
     public LiveData<List<Task>> getAllTasks() {
-        if(isSorted > 0){
-            System.out.println("getting sorted List");
-            return mTaskRepository.getAllSortedTasks(isSorted);
-        }
-        else return this.allTasks;
+        return this.allTasksMediator;
     }
 
 
@@ -116,6 +155,9 @@ public class MainActivityViewModel extends ViewModel {
     }
     public void updateSorted(int isSorted){
         this.isSorted = isSorted;
+        Integer newInt = isSorted;
+        this.sortType.setValue(newInt);
+        System.out.println("task " + allTasksMediator.getValue().get(1).getName());
     }
     /*private void combine(@Nullable List<Task> tasks){
         System.out.println("in combine");
