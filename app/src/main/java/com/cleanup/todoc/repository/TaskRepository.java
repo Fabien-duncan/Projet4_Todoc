@@ -42,13 +42,4 @@ public class TaskRepository {
     // --- UPDATE ---
     public void updateTask(Task task){ mTaskDao.updateTask(task); }
 
-    public void updateTasks(List<Task> tasks){
-        this.mutableTasks.setValue(tasks);
-        System.out.println("Name of first task: " +mutableTasks.getValue().get(0).getName());
-    }
-
-    public void setMutableTasks(List<Task> task) {
-        this.mutableTasks.setValue(task);
-    }
-
 }
