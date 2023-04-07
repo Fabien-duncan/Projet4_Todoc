@@ -21,7 +21,7 @@ public class TaskRepository {
 
     public TaskRepository(TaskDao taskDao) {
         this.mTaskDao = taskDao;
-        this.allTasks = mTaskDao.getAlltask();
+        //this.allTasks = mTaskDao.getAlltask();
 
         //mutableTasks.setValue(mTaskDao.getListTasks());
         //System.out.println("Name of first task: " +allTasks.getValue().get(0).getName());
@@ -31,7 +31,7 @@ public class TaskRepository {
     }
 
     // --- GET ---
-    public LiveData<List<Task>> getAllTasks(){ return allTasks; }
+    public LiveData<List<Task>> getAllTasks(){ return mTaskDao.getAlltask(); }
     public LiveData<List<Task>> getAllSortedTasks(int sortType){return mTaskDao.getSortedList(sortType);}
     // --- CREATE ---
     public void addTask(Task task){ mTaskDao.addTask(task); }
