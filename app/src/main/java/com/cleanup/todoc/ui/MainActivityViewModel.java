@@ -35,8 +35,8 @@ public class MainActivityViewModel extends ViewModel {
     private LiveData<List<Task>> tasksSortedByTimeAsc;
     @Nullable
     private LiveData<List<Task>> tasksSortedByTimeDesc;
-    @Nullable
-    private LiveData<List<Project>> allProjects;
+    //@Nullable
+    //private LiveData<List<Project>> allProjects;
     @Nullable
     private MutableLiveData<Integer> sortType = new MutableLiveData<>();
 
@@ -52,7 +52,7 @@ public class MainActivityViewModel extends ViewModel {
 
         allTasks = mTaskRepository.getAllTasks();
         //allTasks = mTaskRepository.getAllSortedTasks(4);
-        allProjects = mProjectRepository.getAllProjects();
+        //allProjects = mProjectRepository.getAllProjects();
         sortType.setValue(0);
 
         tasksSortedAtoZ = mTaskRepository.getAllSortedTasks(1);
@@ -118,13 +118,14 @@ public class MainActivityViewModel extends ViewModel {
     // FOR Projects
     // -------------
     public LiveData<List<Project>> getAllProjects() {
-        return allProjects;
+        return mProjectRepository.getAllProjects();
     }
     // -------------
     // FOR Tasks
     // -------------
     public LiveData<List<Task>> getAllTasks() {
         return this.allTasksMediator;
+        //return mTaskRepository.getAllTasks();
     }
     public void addTask(long projectId, @NonNull String name) {
         executor.execute(() -> {

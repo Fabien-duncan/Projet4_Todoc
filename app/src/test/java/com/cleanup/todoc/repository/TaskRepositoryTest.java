@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,9 @@ public class TaskRepositoryTest {
         allTasks.add(new Task(1L,"testTask_3", new Date().getTime()));
         allTasks.add(new Task(2L,"testTask_1", new Date().getTime()));
         allTasks.add(new Task(3L,"testTask_2", new Date().getTime()));
+        allTasks.get(0).setId(1L);
+        allTasks.get(1).setId(2L);
+        allTasks.get(2).setId(3L);
 
         setupDaoMethods();
     }
@@ -92,7 +96,7 @@ public class TaskRepositoryTest {
 
     @Test
     public void testDeleteTask() {
-        long taskID = 0L;
+        long taskID = allTasks.get(0).getId();
         LiveData<List<Task>> taskLiveData = Mockito.spy(new MutableLiveData<>(allTasks));
         Mockito.doReturn(taskLiveData).when(mTaskDao).getAlltask();
         int size = taskLiveData.getValue().size();
@@ -132,12 +136,13 @@ public class TaskRepositoryTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
-                /*long id = (long)invocation.getArguments()[0];
+                long id = (long)invocation.getArguments()[0];
                 for(int i =0; i < allTasks.size(); i++){
-                    if(allTasks.get(i).getId() == id) allTasks.remove(id);
-                }*/
-
-                allTasks.remove(0);
+                    if(allTasks.get(i).getId() == id){
+                        System.out.println("dlt item: " + i);
+                        allTasks.remove(i);
+                    }
+                }
                 return(null);
             }
         }).when(mTaskDao).deleteTask(any(Long.class));
