@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;*/
 import android.view.View;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
@@ -112,6 +114,12 @@ public class TestUtils {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.scrollToPosition(this.position);
         }
+    }
+    public static <T> T getValueForTesting(@NonNull final LiveData<T> liveData) {
+        liveData.observeForever(t -> {
+        });
+
+        return liveData.getValue();
     }
 
 }
