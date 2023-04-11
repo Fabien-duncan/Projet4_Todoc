@@ -55,7 +55,6 @@ public class MainActivityViewModelTest {
         LiveData<List<Project>> allProjects = Mockito.spy(new MutableLiveData<>(dummyProject));
 
         doReturn(allProjects).when(mProjectRepository).getAllProjects();
-        doReturn(allTasks).when(mTaskRepository).getAllTasks();
         doReturn(allTasks).when(mTaskRepository).getAllSortedTasks(anyInt());
 
         setupRepositoryMethods();
@@ -79,7 +78,7 @@ public class MainActivityViewModelTest {
 
         assertEquals(4, tasks.size());
 
-        verify(mTaskRepository).getAllTasks();
+        verify(mTaskRepository).getAllSortedTasks(3);
         verifyNoMoreInteractions(mTaskRepository);
     }
 
@@ -123,10 +122,7 @@ public class MainActivityViewModelTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 for (Object rawTask : invocation.getArguments()) {
-                    System.out.println("creating new task");
-                    Task newTask=mock(Task.class);
-
-                    dummyTasks.add(newTask);
+                    dummyTasks.add(any());
                 }
                 return(null);
             }

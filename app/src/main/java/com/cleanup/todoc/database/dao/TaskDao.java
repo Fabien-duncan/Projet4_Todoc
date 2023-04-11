@@ -17,8 +17,8 @@ import java.util.List;
 
 @Dao
 public interface TaskDao {
-    @Query("SELECT * FROM Task")
-    LiveData<List<Task>> getAlltask();
+    /*@Query("SELECT * FROM Task")
+    LiveData<List<Task>> getAlltask();*/
     @Query("SELECT * FROM Task")
     List<Task> getListTasks();
     @Query("Select * FROM Task ORDER BY " +

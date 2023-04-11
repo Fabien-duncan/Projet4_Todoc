@@ -52,16 +52,16 @@ public class TaskRepositoryTest {
     @Test
     public void tesGetAllTasks() {
         LiveData<List<Task>> taskLiveData = Mockito.spy(new MutableLiveData<>(allTasks));
-        Mockito.doReturn(taskLiveData).when(mTaskDao).getAlltask();
+        Mockito.doReturn(taskLiveData).when(mTaskDao).getSortedList(anyInt());
 
-        LiveData<List<Task>> result = mTaskRepository.getAllTasks();
+        LiveData<List<Task>> result = mTaskRepository.getAllSortedTasks(3);
 
         assertEquals(taskLiveData, result);
         assertEquals(taskLiveData.getValue().size(), 3);
         assertEquals(result.getValue().size(), 3);
         assertEquals(taskLiveData.getValue().get(0).getName(), allTasks.get(0).getName());
         assertEquals(taskLiveData.getValue().get(0).getName(), result.getValue().get(0).getName());
-        Mockito.verify(mTaskDao).getAlltask();
+        Mockito.verify(mTaskDao).getSortedList(anyInt());
         Mockito.verifyNoMoreInteractions(mTaskDao);
     }
 
@@ -81,14 +81,14 @@ public class TaskRepositoryTest {
     public void testAddTask() {
         Task newTask = new Task(1L,"testTask_3", new Date().getTime());
         LiveData<List<Task>> taskLiveData = Mockito.spy(new MutableLiveData<>(allTasks));
-        Mockito.doReturn(taskLiveData).when(mTaskDao).getAlltask();
+        Mockito.doReturn(taskLiveData).when(mTaskDao).getSortedList(anyInt());
         int size = taskLiveData.getValue().size();
 
         mTaskRepository.addTask(newTask);
         verify(mTaskDao).addTask(newTask);
         verifyNoMoreInteractions(mTaskDao);
 
-        LiveData<List<Task>> result = mTaskRepository.getAllTasks();
+        LiveData<List<Task>> result = mTaskRepository.getAllSortedTasks(3);
         assertEquals(result.getValue().size(), size+1);
 
         assertEquals(taskLiveData.getValue().get(size).getName(), allTasks.get(size).getName());
@@ -98,14 +98,14 @@ public class TaskRepositoryTest {
     public void testDeleteTask() {
         long taskID = allTasks.get(0).getId();
         LiveData<List<Task>> taskLiveData = Mockito.spy(new MutableLiveData<>(allTasks));
-        Mockito.doReturn(taskLiveData).when(mTaskDao).getAlltask();
+        Mockito.doReturn(taskLiveData).when(mTaskDao).getSortedList(anyInt());
         int size = taskLiveData.getValue().size();
 
         mTaskRepository.deleteTask(taskID);
         verify(mTaskDao).deleteTask(taskID);
         verifyNoMoreInteractions(mTaskDao);
 
-        LiveData<List<Task>> result = mTaskRepository.getAllTasks();
+        LiveData<List<Task>> result = mTaskRepository.getAllSortedTasks(3);
         assertEquals(result.getValue().size(), size-1);
 
     }

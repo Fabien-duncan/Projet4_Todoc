@@ -50,10 +50,10 @@ public class MainActivityViewModel extends ViewModel {
 
     public void init() {
 
-        allTasks = mTaskRepository.getAllTasks();
+        allTasks = mTaskRepository.getAllSortedTasks(3);
         //allTasks = mTaskRepository.getAllSortedTasks(4);
         //allProjects = mProjectRepository.getAllProjects();
-        sortType.setValue(0);
+        sortType.setValue(3);
 
         tasksSortedAtoZ = mTaskRepository.getAllSortedTasks(1);
         tasksSortedZtoA = mTaskRepository.getAllSortedTasks(2);

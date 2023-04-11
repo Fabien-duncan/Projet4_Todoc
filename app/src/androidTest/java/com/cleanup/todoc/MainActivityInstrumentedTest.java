@@ -55,7 +55,7 @@ public class MainActivityInstrumentedTest {
         onView(allOf(withId(R.id.list_tasks), isDisplayed())).check(matches(hasMinimumChildCount(1)));
     }
 
-    /*@Test
+   /* @Test
     public void addAndRemoveTask() {
         MainActivity activity = rule.getActivity();
         TextView lblNoTask = activity.findViewById(R.id.lbl_no_task);
