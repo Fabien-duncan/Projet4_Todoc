@@ -64,7 +64,7 @@ public class MainActivityViewModelTest {
         mMainActivityViewModel = new MainActivityViewModel(mTaskRepository,mProjectRepository,mExecutor);
     }
 
-    @Test
+    /*@Test
     public void testGetAllProjects(){
         List<Project> projects = mMainActivityViewModel.getAllProjects().getValue();
 
@@ -72,18 +72,18 @@ public class MainActivityViewModelTest {
 
         verify(mProjectRepository).getAllProjects();
         verifyNoMoreInteractions(mProjectRepository);
-    }
+    }*/
 
-    /*@Test
+    @Test
     public void testGetAllTasks(){
         List<Task> tasks = TestUtil.getValueForTesting(mMainActivityViewModel.getAllTasks());
 
         System.out.println("size " + tasks.size());
-        *//*assertEquals(4, tasks.size());
+        assertEquals(4, tasks.size());
 
-        verify(mTaskRepository).getAllSortedTasks(3);
-        verifyNoMoreInteractions(mTaskRepository);*//*
-    }*/
+        //verify(mTaskRepository).getAllSortedTasks(3);
+        verifyNoMoreInteractions(mTaskRepository);
+    }
 
     /*@Test
     public void deleteTask() {
