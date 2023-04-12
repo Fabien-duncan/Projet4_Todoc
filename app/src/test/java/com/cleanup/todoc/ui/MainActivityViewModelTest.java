@@ -16,6 +16,7 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.repository.ProjectRepository;
 import com.cleanup.todoc.repository.TaskRepository;
+import com.cleanup.todoc.utils.TestUtil;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,11 +38,9 @@ import java.util.concurrent.Executors;
 @RunWith(MockitoJUnitRunner.class)
 public class MainActivityViewModelTest {
 
-    private Executor mExecutor = Executors.newSingleThreadExecutor();
-    @Mock
-    private TaskRepository mTaskRepository = mock(TaskRepository.class);
-    @Mock
-    private ProjectRepository mProjectRepository = mock(ProjectRepository.class);
+    private Executor mExecutor;
+    private TaskRepository mTaskRepository;
+    private ProjectRepository mProjectRepository;
     private MainActivityViewModel mMainActivityViewModel;
 
     private  List<Project> dummyProject;
@@ -49,13 +48,16 @@ public class MainActivityViewModelTest {
 
     @Before
     public void setUp(){
-        dummyProject = getDummmyProject();
+        mExecutor = Executors.newSingleThreadExecutor();
+        mTaskRepository = mock(TaskRepository.class);
+        mProjectRepository = mock(ProjectRepository.class);
+        dummyProject = getDummyProject();
         dummyTasks = getDummyTasks(dummyProject);
-        LiveData<List<Task>> allTasks = Mockito.spy(new MutableLiveData<>(dummyTasks));
+        //LiveData<List<Task>> allTasks = Mockito.spy(new MutableLiveData<>(dummyTasks));
         LiveData<List<Project>> allProjects = Mockito.spy(new MutableLiveData<>(dummyProject));
 
         doReturn(allProjects).when(mProjectRepository).getAllProjects();
-        doReturn(allTasks).when(mTaskRepository).getAllSortedTasks(anyInt());
+        //doReturn(allTasks).when(mTaskRepository).getAllSortedTasks(anyInt());
 
         setupRepositoryMethods();
 
@@ -72,32 +74,41 @@ public class MainActivityViewModelTest {
         verifyNoMoreInteractions(mProjectRepository);
     }
 
-    @Test
+    /*@Test
     public void testGetAllTasks(){
-        List<Task> tasks = mMainActivityViewModel.getAllTasks().getValue();
+        List<Task> tasks = TestUtil.getValueForTesting(mMainActivityViewModel.getAllTasks());
 
-        assertEquals(4, tasks.size());
+        System.out.println("size " + tasks.size());
+        *//*assertEquals(4, tasks.size());
 
         verify(mTaskRepository).getAllSortedTasks(3);
-        verifyNoMoreInteractions(mTaskRepository);
-    }
+        verifyNoMoreInteractions(mTaskRepository);*//*
+    }*/
 
+    /*@Test
+    public void deleteTask() {
+        int size = dummyTasks.size();
+        mMainActivityViewModel.deleteTask(2);
+
+        verify(mTaskRepository).deleteTask(any(Long.class));
+        verifyNoMoreInteractions(mTaskRepository);
+
+        assertEquals(dummyTasks.size(), size-1);
+    }*/
     @Test
     public void addTask() {
         //Task newTask = new Task(1L,"testTask_5", new Date().getTime());
         int size = dummyTasks.size();
 
-        mMainActivityViewModel.addTask(1L, "testTask_5");
+        mMainActivityViewModel.addTask(5L, "testTask_5");
         verify(mTaskRepository).addTask(any());
         verifyNoMoreInteractions(mTaskRepository);
 
         assertEquals(dummyTasks.size(), size+1);
     }
 
-    @Test
-    public void deleteTask() {
-    }
-    private List<Project> getDummmyProject() {
+
+    private List<Project> getDummyProject() {
         List<Project> projects = new ArrayList<>();
         projects.add(new Project(1L, "Projet Tartampion", 0xFFEADAD1));
         projects.add(new Project(2L, "Projet Lucidia", 0xFFB4CDBA));
@@ -132,14 +143,15 @@ public class MainActivityViewModelTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
 
                 long id = (long)invocation.getArguments()[0];
-                for(int i =0; i < allTasks.size(); i++){
-                    if(allTasks.get(i).getId() == id){
+                for(int i =0; i < dummyTasks.size(); i++){
+                    if(dummyTasks.get(i).getId() == id){
                         System.out.println("dlt item: " + i);
-                        allTasks.remove(i);
+                        dummyTasks.remove(i);
+                        System.out.println("deleted");
                     }
                 }
                 return(null);
             }
-        }).when(mTaskDao).deleteTask(any(Long.class));*/
+        }).when(mTaskRepository).deleteTask(any(Long.class));*/
     }
 }

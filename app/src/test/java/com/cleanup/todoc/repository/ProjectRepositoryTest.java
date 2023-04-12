@@ -81,9 +81,5 @@ public class ProjectRepositoryTest {
         assertEquals(result.getValue().size(), size+1);
 
         assertEquals(projectLiveData.getValue().get(size).getName(), "test Porject");
-
     }
-
-
-
 }
