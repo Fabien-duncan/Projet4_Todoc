@@ -16,18 +16,9 @@ import java.util.concurrent.Executors;
 
 public class TaskRepository {
     private final TaskDao mTaskDao;
-    private MutableLiveData<List<Task>> mutableTasks;
-    private LiveData<List<Task>> allTasks;
 
     public TaskRepository(TaskDao taskDao) {
         this.mTaskDao = taskDao;
-        //this.allTasks = mTaskDao.getAlltask();
-
-        //mutableTasks.setValue(mTaskDao.getListTasks());
-        //System.out.println("Name of first task: " +allTasks.getValue().get(0).getName());
-        //mTaskDao.getAlltask().observe(this, this::updateTasks);
-        //this.mutableTasks.setValue(mTaskDao.getListTasks());
-
     }
 
     // --- GET ---

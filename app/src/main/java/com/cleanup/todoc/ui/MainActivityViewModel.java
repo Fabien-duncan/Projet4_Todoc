@@ -22,7 +22,6 @@ public class MainActivityViewModel extends ViewModel {
     private final TaskRepository mTaskRepository;
     private final ProjectRepository mProjectRepository;
     private final Executor executor;
-    private String name;
 
     // DATA
     @Nullable
@@ -35,13 +34,10 @@ public class MainActivityViewModel extends ViewModel {
     private LiveData<List<Task>> tasksSortedByTimeAsc;
     @Nullable
     private LiveData<List<Task>> tasksSortedByTimeDesc;
-    //@Nullable
-    //private LiveData<List<Project>> allProjects;
     @Nullable
     private MutableLiveData<Integer> sortType = new MutableLiveData<>();
 
     private MediatorLiveData<List<Task>> allTasksMediator = new MediatorLiveData<>();
-    //private int isSorted = 0;
     public MainActivityViewModel(TaskRepository taskRepository, ProjectRepository projectRepository, Executor executor) {
         mProjectRepository = projectRepository;
         mTaskRepository = taskRepository;
@@ -50,10 +46,6 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public void init() {
-
-
-        //allTasks = mTaskRepository.getAllSortedTasks(4);
-        //allProjects = mProjectRepository.getAllProjects();
         sortType.setValue(3);
 
         tasksSortedAtoZ = mTaskRepository.getAllSortedTasks(1);

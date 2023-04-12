@@ -17,10 +17,6 @@ import java.util.List;
 
 @Dao
 public interface TaskDao {
-    /*@Query("SELECT * FROM Task")
-    LiveData<List<Task>> getAlltask();*/
-    @Query("SELECT * FROM Task")
-    List<Task> getListTasks();
     @Query("Select * FROM Task ORDER BY " +
             "CASE WHEN :sortType = 1 THEN name END ASC, " +
             "CASE WHEN :sortType = 2 THEN name END DESC," +
