@@ -14,6 +14,7 @@ import com.cleanup.todoc.R;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @NonNull
     private List<Task> tasks;
 
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     /**
      * The listener for when a task needs to be deleted
@@ -158,9 +159,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             for(int i = 0; i < projects.size(); i++){
                 if(task.getProjectId() == projects.get(i).getId()) taskProject = projects.get(i);
             }
-            //final Project taskProject = task.getProject();
             if (taskProject != null) {
                 imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                imgProject.setVisibility(View.VISIBLE);
                 lblProjectName.setText(taskProject.getName());
             } else {
                 imgProject.setVisibility(View.INVISIBLE);

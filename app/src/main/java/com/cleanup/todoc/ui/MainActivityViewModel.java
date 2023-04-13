@@ -42,12 +42,17 @@ public class MainActivityViewModel extends ViewModel {
         mProjectRepository = projectRepository;
         mTaskRepository = taskRepository;
         this.executor = executor;
-        allTasks = mTaskRepository.getAllSortedTasks(3);
+        //allTasks = mTaskRepository.getAllSortedTasks(3);
+        init();
     }
 
+    public void initStuff(){
+        sortType.setValue(3);
+        allTasks = mTaskRepository.getAllSortedTasks(3);
+    }
     public void init() {
         sortType.setValue(3);
-
+        allTasks = mTaskRepository.getAllSortedTasks(3);
         tasksSortedAtoZ = mTaskRepository.getAllSortedTasks(1);
         tasksSortedZtoA = mTaskRepository.getAllSortedTasks(2);
         tasksSortedByTimeAsc = mTaskRepository.getAllSortedTasks(3);

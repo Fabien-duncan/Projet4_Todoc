@@ -24,6 +24,7 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mMainActivityViewModel.getAllTasks().observe(this, this::updateListOfTasks);
         binding.listTasks.setAdapter(adapter);
+        //adapter.updateProjects(Arrays.asList(allProjects));
 
         //updateTasks();
         binding.fabAddTask.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
     private void configureViewModel() {
         mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
-        mMainActivityViewModel.init();
+        //mMainActivityViewModel.init();
     }
     private void getProjects() {
         this.mMainActivityViewModel.getAllProjects().observe(this, this::updateProjectList);
