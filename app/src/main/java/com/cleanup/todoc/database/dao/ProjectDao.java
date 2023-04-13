@@ -23,4 +23,7 @@ public interface ProjectDao {
 
     @Query("SELECT name FROM Project WHERE id = :projectId")
     String getProjectName(long projectId);
+
+    @Query("DELETE FROM Task WHERE id = :projectid")
+    int deleteProject(long projectid);
 }

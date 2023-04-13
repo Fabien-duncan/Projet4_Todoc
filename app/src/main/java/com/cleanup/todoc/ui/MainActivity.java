@@ -9,16 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.databinding.ActivityMainBinding;
@@ -27,7 +24,6 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     @NonNull
     private SortMethod sortMethod = SortMethod.NONE;
-    private int isSorted = 0;
 
     /**
      * Dialog to create a new task
@@ -100,13 +95,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
 
     }
-    private void configureViewModel() {
-        mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
-        mMainActivityViewModel.init();
-    }
-    private void getProjects() {
-        this.mMainActivityViewModel.getAllProjects().observe(this, this::updateProjectList);
-    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
@@ -131,19 +120,20 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             mMainActivityViewModel.updateSorted(4);
         }
 
-        //updateTasks();
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onDeleteTask(Task task) {
         this.mMainActivityViewModel.deleteTask(task.getId());
-        //System.out.println("delete task " + task.getName());
-        //tasks.remove(task);
-        //updateTasks();
     }
-
+    private void configureViewModel() {
+        mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
+        mMainActivityViewModel.init();
+    }
+    private void getProjects() {
+        this.mMainActivityViewModel.getAllProjects().observe(this, this::updateProjectList);
+    }
     /**
      * Called when the user clicks on the positive button of the Create Task Dialog.
      *
