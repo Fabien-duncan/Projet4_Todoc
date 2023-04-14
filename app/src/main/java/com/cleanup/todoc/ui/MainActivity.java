@@ -31,6 +31,7 @@ import java.util.List;
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
  * <p>Displays the list of tasks.</p>
+ * <p>You may add or filter Tasks</p>
  *
  * @author Gaëtan HERFRAY
  */
@@ -79,16 +80,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         setContentView(binding.getRoot());
 
         configureViewModel();
-
         getProjects();
 
         adapter = new TasksAdapter(this);
         binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mMainActivityViewModel.getAllTasks().observe(this, this::updateListOfTasks);
         binding.listTasks.setAdapter(adapter);
-        //adapter.updateProjects(Arrays.asList(allProjects));
 
-        //updateTasks();
         binding.fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,12 +96,23 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     }
 
+    /**
+     * Inflates the filter menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
         return true;
     }
 
+    /**
+     * Method that deals with the selection of the sorting type. It retrieves an item containing the id
+     * of the elements selected in the filter menu. It then updates the sorting type
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -125,14 +134,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * calls the ViewModel's deleteTask() method in or to remove a Task from the database
+     * @param task the task that needs to be deleted
+     */
     @Override
     public void onDeleteTask(Task task) {
         this.mMainActivityViewModel.deleteTask(task.getId());
     }
+    //call the ViewModelFactory to set up the dependencies
     private void configureViewModel() {
         mMainActivityViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(MainActivityViewModel.class);
-        //mMainActivityViewModel.init();
     }
+    //observes the projects LiveData. Is not really required yet as we can not create new projects, however is put in place for potential future improvements
     private void getProjects() {
         this.mMainActivityViewModel.getAllProjects().observe(this, this::updateProjectList);
     }
@@ -275,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             dialogSpinner.setAdapter(adapter);
         }
     }
+    //updates the array of Projects by retrieving the Projects from a List
     private void updateProjectList(List<Project> projects){
         adapter.updateProjects(projects);
         allProjects = new Project[projects.size()];

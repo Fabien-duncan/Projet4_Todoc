@@ -17,15 +17,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/**
+ * ViewModel class. This class is used to manage the iteraction between the View and the data.
+ */
 public class MainActivityViewModel extends ViewModel {
     // REPOSITORIES
     private final TaskRepository mTaskRepository;
     private final ProjectRepository mProjectRepository;
     private final Executor executor;
 
-    // DATA
-    @Nullable
-    private LiveData<List<Task>> allTasks;
+    // -------------
+    // Live data for each type of Liter
+    // -------------
     @Nullable
     private LiveData<List<Task>> tasksSortedAtoZ;
     @Nullable
@@ -35,29 +38,30 @@ public class MainActivityViewModel extends ViewModel {
     @Nullable
     private LiveData<List<Task>> tasksSortedByTimeDesc;
     @Nullable
-    private MutableLiveData<Integer> sortType = new MutableLiveData<>();
+    private MutableLiveData<Integer> sortType = new MutableLiveData<>();//used to decide which LiveData is placed inside the mediator
 
-    private MediatorLiveData<List<Task>> allTasksMediator = new MediatorLiveData<>();
+    private MediatorLiveData<List<Task>> allTasksMediator = new MediatorLiveData<>();//The live data that will be observed by the view
     public MainActivityViewModel(TaskRepository taskRepository, ProjectRepository projectRepository, Executor executor) {
         mProjectRepository = projectRepository;
         mTaskRepository = taskRepository;
         this.executor = executor;
-        //allTasks = mTaskRepository.getAllSortedTasks(3);
         init();
     }
 
-    public void initStuff(){
-        sortType.setValue(3);
-        allTasks = mTaskRepository.getAllSortedTasks(3);
-    }
+    /**
+     * initialises all the different LiveData and sets up the observers for the MediatorLiveData.
+     * This will make sure the Mediator contains the correct List to display in the View
+     */
     public void init() {
         sortType.setValue(3);
-        allTasks = mTaskRepository.getAllSortedTasks(3);
         tasksSortedAtoZ = mTaskRepository.getAllSortedTasks(1);
         tasksSortedZtoA = mTaskRepository.getAllSortedTasks(2);
         tasksSortedByTimeAsc = mTaskRepository.getAllSortedTasks(3);
         tasksSortedByTimeDesc = mTaskRepository.getAllSortedTasks(4);
 
+        // -------------
+        // All the different observes for the different livedata and the sortType
+        // -------------
         allTasksMediator.addSource(tasksSortedAtoZ, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
@@ -67,14 +71,6 @@ public class MainActivityViewModel extends ViewModel {
             }
         });
 
-        allTasksMediator.addSource(allTasks, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                if (tasks != null) {
-                    if (sortType.getValue() == 0) allTasksMediator.setValue(tasks);
-                }
-            }
-        });
         allTasksMediator.addSource(tasksSortedZtoA, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
@@ -115,33 +111,60 @@ public class MainActivityViewModel extends ViewModel {
     // -------------
     // FOR Projects
     // -------------
+
+    /**
+     * returns the List of Projects
+     * @return LiveData containing the List Of Projects
+     */
     public LiveData<List<Project>> getAllProjects() {
         return mProjectRepository.getAllProjects();
     }
     // -------------
     // FOR Tasks
     // -------------
+    /**
+     * returns the List of Tasks
+     * @return LiveData containing the List Of Tasks
+     */
     public LiveData<List<Task>> getAllTasks() {
         return this.allTasksMediator;
-        //return mTaskRepository.getAllTasks();
     }
+
+    /**
+     * Adds a task to the Database by calling the addTask() method from the TaskRepository
+     * @param projectId is the id of the project linked to the task
+     * @param name is the name of the new project
+     */
     public void addTask(long projectId, @NonNull String name) {
         executor.execute(() -> {
             mTaskRepository.addTask(new Task(projectId, name, new Date().getTime()));
         });
     }
+
+    /**
+     * removes a Task from the Room Database by using the deleteTask() method ot the repository
+     * @param taskId is the identification number of the Task to delete from the database
+     */
     public void deleteTask(long taskId) {
         executor.execute(() -> mTaskRepository.deleteTask(taskId));
 
     }
+
+    /**
+     * method used to update the sort type in order to sned the correct List of tasks to the View
+     * @param sortType
+     */
+    public void updateSorted(int sortType){
+        this.sortType.setValue(sortType);
+    }
+
+    // -------------
+    // Features not yet implemented
+    // -------------
     public void updateTask(Task task) {
         executor.execute(() -> mTaskRepository.updateTask(task));
     }
     public void addProject(Project project){
         executor.execute(() -> mProjectRepository.addProject(project));
-    }
-    public void updateSorted(int sortType){
-        //this.isSorted = isSorted;
-        this.sortType.setValue(sortType);
     }
 }

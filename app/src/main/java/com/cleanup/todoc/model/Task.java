@@ -67,10 +67,20 @@ public class Task {
     public void setId(long id) {
         this.id = id;
     }
+    /**
+     * Returns the unique project identifier of the task.
+     *
+     * @return the unique project identifier of the task
+     */
     public long getProjectId() {
         return projectId;
     }
 
+    /**
+     * Returns the creation time of the task.
+     *
+     * @return the creation time of the task
+     */
     public long getCreationTimestamp() {
         return creationTimestamp;
     }

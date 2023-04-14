@@ -15,8 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+/**
+ * Factory, used to do the dependency injections
+ */
 public class ViewModelFactory implements ViewModelProvider.Factory {
-
     private final TaskRepository mTaskRepository;
 
     private final ProjectRepository mProjectRepository;

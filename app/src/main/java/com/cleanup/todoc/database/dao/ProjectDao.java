@@ -10,6 +10,11 @@ import com.cleanup.todoc.model.Project;
 
 import java.util.List;
 
+/**
+ * DAO for the projects.
+ * Allows interaction between program and database
+ * Contains queries and access calls to the Room database
+ */
 @Dao
 public interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

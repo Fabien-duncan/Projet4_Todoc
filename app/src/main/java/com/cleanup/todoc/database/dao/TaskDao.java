@@ -11,7 +11,11 @@ import com.cleanup.todoc.model.Task;
 
 import java.util.List;
 
-
+/**
+ * DAO for the Tasks.
+ * Allows interaction between program and database
+ * Contains queries and access calls to the Room database
+ */
 @Dao
 public interface TaskDao {
     @Query("Select * FROM Task ORDER BY " +
