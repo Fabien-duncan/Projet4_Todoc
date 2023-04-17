@@ -14,6 +14,7 @@ import com.cleanup.todoc.R;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @NonNull
     private List<Task> tasks;
 
+    private List<Project> projects = new ArrayList<>();
+
     /**
      * The listener for when a task needs to be deleted
      */
@@ -37,10 +40,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     /**
      * Instantiates a new TasksAdapter.
      *
-     * @param tasks the list of tasks the adapter deals with to set
      */
-    TasksAdapter(@NonNull final List<Task> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
-        this.tasks = tasks;
+    TasksAdapter(@NonNull final DeleteTaskListener deleteTaskListener) {
         this.deleteTaskListener = deleteTaskListener;
     }
 
@@ -53,6 +54,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         this.tasks = tasks;
         notifyDataSetChanged();
     }
+    void updateProjects(@NonNull final List<Project> projects) {
+        this.projects = projects;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -63,12 +68,13 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder taskViewHolder, int position) {
-        taskViewHolder.bind(tasks.get(position));
+        taskViewHolder.bind(tasks.get(position), projects);
     }
 
     @Override
     public int getItemCount() {
-        return tasks.size();
+        if(tasks == null) return 0;
+        else return tasks.size();
     }
 
     /**
@@ -146,13 +152,16 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
          *
          * @param task the task to bind in the item view
          */
-        void bind(Task task) {
+        void bind(Task task, List<Project> projects) {
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
-
-            final Project taskProject = task.getProject();
+            Project taskProject = null;
+            for(int i = 0; i < projects.size(); i++){
+                if(task.getProjectId() == projects.get(i).getId()) taskProject = projects.get(i);
+            }
             if (taskProject != null) {
                 imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                imgProject.setVisibility(View.VISIBLE);
                 lblProjectName.setText(taskProject.getName());
             } else {
                 imgProject.setVisibility(View.INVISIBLE);
